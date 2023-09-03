@@ -1,0 +1,105 @@
+<script setup>
+import { useDark } from "@vueuse/core";
+import { ref } from "vue";
+import MobileNavbar from "./MobileNavbar.vue";
+import SearchBox from "../Components/SearchBox.vue";
+
+const isDark = useDark();
+const toggleTheme = () => {
+    isDark.value = !isDark.value;
+};
+
+let openSearchBox = ref(false);
+const toggleSearchBox = () => {
+    openSearchBox.value = !openSearchBox.value;
+};
+</script>
+
+<template>
+    <header>
+        <!-- px-4 py-4 lg:px-12 lg:py-6 -->
+        <nav class="flex justify-between items-center py-4">
+            <div>
+                <Link href="/">
+                    <img src="/imgs/logo.png" class="w-[80px]" alt="" />
+                </Link>
+            </div>
+            <div class="flex sm:space-x-8 items-center">
+                <ul class="hidden sm:flex space-x-8 items-center">
+                    <li class="item" :class="{ active: $page.url === '/' }">
+                        <Link href="/">Home</Link>
+                    </li>
+                    <li
+                        class="item"
+                        :class="{ active: $page.url === '/posts' }"
+                    >
+                        <Link href="/posts">Posts</Link>
+                    </li>
+                    <li class="item" :class="{ active: $page.url === '/tags' }">
+                        <Link href="/tags">Tags</Link>
+                    </li>
+                    <li
+                        class="item"
+                        :class="{ active: $page.url === '/about' }"
+                    >
+                        <Link href="/about">About</Link>
+                    </li>
+                </ul>
+                <ul class="flex space-x-6 sm:space-x-8 items-center">
+                    <li class="item">
+                        <button
+                            data-modal-target="popup-modal"
+                            data-modal-toggle="popup-modal"
+                            type="button"
+                            @click="toggleSearchBox"
+                        >
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </li>
+                    <li class="item">
+                        <button class="" @click="toggleTheme">
+                            <i
+                                class="fa-solid"
+                                :class="
+                                    isDark
+                                        ? 'fa-sun text-yellow-400'
+                                        : 'fa-moon'
+                                "
+                            ></i>
+                        </button>
+                    </li>
+                </ul>
+                <button
+                    class="sm:hidden text-3xl ml-6 dark:text-white text-gray-700"
+                    data-drawer-target="drawer-navigation"
+                    data-drawer-show="drawer-navigation"
+                    aria-controls="drawer-navigation"
+                >
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+    <MobileNavbar />
+    <SearchBox :open="openSearchBox" @close="openSearchBox = false" />
+</template>
+
+<style lang="scss" scoped>
+// .nav-items-wrapper {
+// @apply flex space-x-8 items-center;
+
+.item {
+    a,
+    button {
+        @apply text-gray-800 dark:text-gray-200 dark:hover:text-gray-400 text-lg hover:text-gray-700 transition-all;
+
+        i {
+            @apply text-xl;
+        }
+    }
+    &.active {
+        @apply font-bold;
+    }
+}
+// }
+</style>
