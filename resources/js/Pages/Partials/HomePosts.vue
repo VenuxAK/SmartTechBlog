@@ -1,4 +1,7 @@
-<script setup></script>
+<script setup>
+const props = defineProps(["post"]);
+// console.log(props.post);
+</script>
 
 <template>
     <div
@@ -6,33 +9,35 @@
     >
         <div class="lg:w-[25%]">
             <h1 class="text-lg text-gray-700 dark:text-gray-200 font-medium">
-                August 5, 2023
+                {{ post.created_at }}
             </h1>
         </div>
         <div class="lg:w-[75%] flex flex-col space-y-7">
             <div>
                 <h1 class="text-2xl font-bold">
-                    <Link href="/posts/slug">Title</Link>
+                    <Link :href="'/posts/' + post.slug">{{ post.title }}</Link>
                 </h1>
                 <div class="flex space-x-4 uppercase">
-                    <Link :href="'#' + i" v-for="i in 4" :key="i">
-                        <span class="text-primary hover:text-blue-700"
-                            >Tag {{ i }}</span
-                        >
+                    <Link
+                        :href="'tags/' + tag.name"
+                        v-if="post.tags"
+                        v-for="tag in post.tags"
+                        :key="tag"
+                    >
+                        <span class="text-primary hover:text-blue-700">{{
+                            tag.name
+                        }}</span>
                     </Link>
                 </div>
             </div>
             <div>
                 <p class="text-gray-600 dark:text-gray-400 font-medium">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Esse pariatur rem aliquam aspernatur! Non quis deleniti
-                    aliquid nulla, eveniet distinctio in consectetur aspernatur
-                    aut quidem, hic quaerat fugit qui neque.
+                    {{ post.body }}
                 </p>
             </div>
             <div>
                 <Link
-                    href="/posts/slug"
+                    :href="'/posts/' + post.slug"
                     class="text-primary hover:text-blue-700 font-medium"
                 >
                     Read More

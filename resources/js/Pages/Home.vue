@@ -7,6 +7,10 @@ export default {
 <script setup>
 import Layout from "../Shared/Layout.vue";
 import HomePosts from "./Partials/HomePosts.vue";
+
+const props = defineProps(["posts"]);
+
+// console.log(props.posts);
 </script>
 
 <template>
@@ -20,8 +24,8 @@ import HomePosts from "./Partials/HomePosts.vue";
             </p>
         </div>
         <div>
-            <div v-for="i in 6" :key="i">
-                <HomePosts />
+            <div v-for="post in posts.slice(0,6)" :key="post.id">
+                <HomePosts :post="post" />
             </div>
             <div class="mt-2 mb-8">
                 <Link href="/posts" class="text-primary text-right block">

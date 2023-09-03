@@ -3,15 +3,18 @@ export default {
     layout: Layout,
 };
 </script>
+
 <script setup>
 import Layout from "../Shared/Layout.vue";
 import Pagination from "../Shared/Pagination.vue";
 
-const props = defineProps(["posts", "tags"]);
-// console.log(props.posts);
+const props = defineProps(["tags", "tagPosts"]);
+
+console.log(props.tagPosts);
 </script>
+
 <template>
-    <section class="animate__animated animate__fadeIn mt-12 mb-16">
+    <section class="mt-12 mb-16">
         <div class="flex w-full md:space-x-6">
             <div
                 class="h-[468px] w-[30%] lg:w-[25%] hidden md:block bg-gray-100 dark:bg-gray-900 pt-8 px-6 overflow-y-scroll rounded"
@@ -26,9 +29,15 @@ const props = defineProps(["posts", "tags"]);
                             :key="tag"
                             class="py-2 font-medium text-gray-500 hover:text-gray-600"
                         >
-                            <Link :href="'/tags/' + tag.name"
-                                >{{ tag.name }} ({{ tag.posts.length }})</Link
+                            <Link
+                                :href="'/tags/' + tag.name"
+                                :class="{
+                                    'text-primary font-bold':
+                                        '/tags/' + tag.name === $page.url,
+                                }"
                             >
+                                {{ tag.name }} ({{ tag.posts.length }})
+                            </Link>
                         </li>
                     </ul>
                 </div>
@@ -36,8 +45,8 @@ const props = defineProps(["posts", "tags"]);
             <div class="md:w-[70%] lg:w-[75%] md:pl-8 lg:pl-12">
                 <div>
                     <div
-                        v-if="posts.data.length > 0"
-                        v-for="post in posts.data"
+                        v-if="tagPosts.posts.length > 0"
+                        v-for="post in tagPosts.posts"
                         :key="post"
                         class="flex flex-col space-y-4 mb-14"
                     >
@@ -79,7 +88,7 @@ const props = defineProps(["posts", "tags"]);
                     </div>
                 </div>
                 <div>
-                    <Pagination :links="posts" />
+                    <!-- <Pagination :links="posts" /> -->
                 </div>
             </div>
         </div>

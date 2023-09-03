@@ -1,6 +1,21 @@
 <script setup>
+import { usePage } from "@inertiajs/vue3";
+import { computed, ref } from "vue";
+
 const props = defineProps(["open"]);
 const emit = defineEmits(["close"]);
+
+let query = ref("");
+const page = usePage();
+
+let filteredPosts = computed(() => {
+    return page.props.posts.filter((post) => {
+        return query.value
+            ? post.title.toLowerCase().includes(query.value.toLowerCase()) ||
+                  post.body.toLowerCase().includes(query.value.toLowerCase())
+            : post;
+    });
+});
 </script>
 <template>
     <div
@@ -24,13 +39,13 @@ const emit = defineEmits(["close"]);
                     <input
                         type="text"
                         placeholder="Search..."
+                        v-model="query"
                         class="w-full h-8 bg-transparent border-2 border-gray-500 dark:border-gray-400 focus:outline-none focus:border-blue-600 dark:focus:border-blue-600 rounded px-2 text-sm"
                     />
                     <div>
-                        <!-- <p>Esc</p> -->
-
                         <button
                             data-modal-hide="popup-modal"
+                            @click="emit('close')"
                             type="button"
                             class="text-gray-500 text-2xl hover:text-gray-700 dark:hover:text-gray-400"
                         >
@@ -45,23 +60,32 @@ const emit = defineEmits(["close"]);
                         Content
                     </h3>
                     <div class="flex flex-col">
-                        <div v-for="i in 8" :key="i">
+                        <div
+                            v-if="filteredPosts.length > 0"
+                            v-for="post in filteredPosts.slice(0, 4)"
+                            :key="post"
+                        >
                             <div class="py-1 px-4 hover:bg-primary mb-2">
                                 <button
                                     class="text-start hover:text-white"
                                     data-modal-hide="popup-modal"
                                 >
-                                    <Link :href="'/posts/slug' + i">
-                                        <h5>August 5, 2023</h5>
+                                    <Link :href="'/posts/' + post.slug">
+                                        <h5>{{ post.created_at }}</h5>
                                         <p>
-                                            Lorem ipsum dolor sit amet,
-                                            consectetur adipisicing elit.
-                                            Reiciendis optio, molestiae dolore
-                                            aspernatur obcaecati ipsum!
+                                            {{
+                                                post.body.length > 100
+                                                    ? post.body.substr(0, 100) +
+                                                      " ..."
+                                                    : post.body.substr(0, 100)
+                                            }}
                                         </p>
                                     </Link>
                                 </button>
                             </div>
+                        </div>
+                        <div v-else>
+                            <h1 class="text-center my-6">No results found!</h1>
                         </div>
                     </div>
                 </div>
@@ -73,16 +97,6 @@ const emit = defineEmits(["close"]);
 <style lang="scss" scoped>
 .animate_box {
     animation: fadeIn; /* referring directly to the animation's @keyframe declaration */
-    animation-duration: 0.5s; /* don't forget to set a duration! */
+    animation-duration: 0.5s;
 }
 </style>
-<!--
-
-    <button
-        data-modal-hide="popup-modal"
-        class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
-        type="button"
-    >
-        <Link href="/posts/slug">Yes, I'm sure</Link>
-    </button>
- -->

@@ -5,6 +5,8 @@ export default {
 </script>
 <script setup>
 import Layout from "../Shared/Layout.vue";
+
+const props = defineProps(["tags"]);
 </script>
 
 <template>
@@ -18,10 +20,15 @@ import Layout from "../Shared/Layout.vue";
                 </div>
                 <div class="max-w-lg md:pl-6 pt-6">
                     <ul class="flex flex-wrap">
-                        <li v-for="i in 15" :key="i" class="">
-                            <Link href="#" class="text-primary pr-6 text-lg">
-                                Tag
-                                <span class="dark:text-white"> ({{ i }}) </span>
+                        <li v-for="tag in tags" :key="tag" class="">
+                            <Link
+                                :href="'/tags/' + tag.name"
+                                class="text-primary pr-6 text-lg"
+                            >
+                                {{ tag.name }}
+                                <span class="dark:text-white">
+                                    ({{ tag.posts.length }})
+                                </span>
                             </Link>
                         </li>
                     </ul>
