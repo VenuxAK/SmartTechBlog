@@ -8,10 +8,9 @@ import Layout from "../Shared/Layout.vue";
 import Pagination from "../Shared/Pagination.vue";
 
 const props = defineProps(["posts", "tags"]);
-// console.log(props.posts);
 </script>
 <template>
-    <section class="animate__animated animate__fadeIn mt-12 mb-16">
+    <section class="mt-12 mb-16">
         <div class="flex w-full md:space-x-6">
             <div
                 class="h-[468px] w-[30%] lg:w-[25%] hidden md:block bg-gray-100 dark:bg-gray-900 pt-8 px-6 overflow-y-scroll rounded"
@@ -33,7 +32,9 @@ const props = defineProps(["posts", "tags"]);
                     </ul>
                 </div>
             </div>
-            <div class="md:w-[70%] lg:w-[75%] md:pl-8 lg:pl-12">
+            <div
+                class="md:w-[70%] lg:w-[75%] md:pl-8 lg:pl-12 animate__animated animate__fadeIn"
+            >
                 <div>
                     <div
                         v-if="posts.data.length > 0"

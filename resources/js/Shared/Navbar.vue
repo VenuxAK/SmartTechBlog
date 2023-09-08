@@ -1,6 +1,6 @@
 <script setup>
 import { useDark } from "@vueuse/core";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import MobileNavbar from "./MobileNavbar.vue";
 import SearchBox from "../Components/SearchBox.vue";
 
@@ -8,11 +8,18 @@ const isDark = useDark();
 const toggleTheme = () => {
     isDark.value = !isDark.value;
 };
-
+const body = document.querySelector("body");
 let openSearchBox = ref(false);
 const toggleSearchBox = () => {
     openSearchBox.value = !openSearchBox.value;
 };
+watch(openSearchBox, () => {
+    if (openSearchBox.value) {
+        body.style = "overflow: hidden;";
+    } else {
+        body.style = "";
+    }
+});
 </script>
 
 <template>
@@ -47,14 +54,17 @@ const toggleSearchBox = () => {
                 </ul>
                 <ul class="flex space-x-6 sm:space-x-8 items-center">
                     <li class="item">
-                        <button
+                        <button type="button" @click="toggleSearchBox">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                        <!-- <button
                             data-modal-target="popup-modal"
                             data-modal-toggle="popup-modal"
                             type="button"
                             @click="toggleSearchBox"
                         >
                             <i class="fa-solid fa-magnifying-glass"></i>
-                        </button>
+                        </button> -->
                     </li>
                     <li class="item">
                         <button class="" @click="toggleTheme">

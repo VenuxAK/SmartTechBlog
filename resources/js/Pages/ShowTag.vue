@@ -10,7 +10,7 @@ import Pagination from "../Shared/Pagination.vue";
 
 const props = defineProps(["tags", "tagPosts"]);
 
-console.log(props.tagPosts);
+// console.log(props.tagPosts);
 </script>
 
 <template>
