@@ -38,7 +38,7 @@ const props = defineProps(["post"]);
                         />
                     </div>
                     <div>
-                        <h5 class="text-sm">Author Name</h5>
+                        <h5 class="text-sm">{{ post.author.name }}</h5>
                         <Link href="#" class="text-sm text-primary"
                             >@twitter</Link
                         >
@@ -58,10 +58,10 @@ const props = defineProps(["post"]);
                     >
                         <li v-for="tag in post.tags" :key="tag">
                             <Link
-                                :href="'/tags/' + tag.name"
+                                :href="'/tags/' + tag"
                                 class="uppercase text-primary text-base"
                             >
-                                {{ tag.name }}
+                                {{ tag }}
                             </Link>
                         </li>
                     </ul>
@@ -94,4 +94,3 @@ const props = defineProps(["post"]);
     }
 }
 </style>
-<!--  Software Development, Object-Oriented Programming, Coding Techniques, Software Architecture -->

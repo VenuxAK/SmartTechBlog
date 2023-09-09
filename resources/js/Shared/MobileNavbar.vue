@@ -1,4 +1,20 @@
-<script setup></script>
+<script setup>
+import { ref } from "vue";
+import AuthWrapper from "../Components/Auth/AuthWrapper.vue";
+import { useForm } from "@inertiajs/vue3";
+
+let openSigninModal = ref(false);
+let form = useForm({});
+
+const toggleSigninModal = () => {
+    openSigninModal.value = !openSigninModal.value;
+};
+const logout = () => {
+    if (confirm("Are you sure want to logout?")) {
+        form.post("/logout");
+    }
+};
+</script>
 
 <template>
     <!-- drawer component -->
@@ -8,12 +24,6 @@
         tabindex="-1"
         aria-labelledby="drawer-navigation-label"
     >
-        <!-- <h5
-            id="drawer-navigation-label"
-            class="text-base font-semibold text-gray-500 uppercase dark:text-gray-400"
-        >
-            Menu
-        </h5> -->
         <div class="container h-full p-6">
             <div class="flex justify-between items-center">
                 <div>
@@ -69,19 +79,20 @@
                     </li>
                     <li>
                         <button data-drawer-hide="drawer-navigation">
-                            <Link
-                                href="/about"
-                                class="nav-item"
-                                :class="{ active: $page.url === '/about' }"
+                            <button
+                                v-if="!$page.props.user"
+                                @click="toggleSigninModal"
                             >
-                                <span class="ml-3">About</span>
-                            </Link>
+                                Sign in
+                            </button>
+                            <button v-else @click="logout">Logout</button>
                         </button>
                     </li>
                 </ul>
             </div>
         </div>
     </div>
+    <AuthWrapper :open="openSigninModal" @close="openSigninModal = false" />
 </template>
 
 <style lang="scss" scoped>

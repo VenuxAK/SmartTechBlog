@@ -3,23 +3,47 @@ import { useDark } from "@vueuse/core";
 import { ref, watch } from "vue";
 import MobileNavbar from "./MobileNavbar.vue";
 import SearchBox from "../Components/SearchBox.vue";
+import AuthWrapper from "../Components/Auth/AuthWrapper.vue";
+import { useForm } from "@inertiajs/vue3";
 
 const isDark = useDark();
 const toggleTheme = () => {
     isDark.value = !isDark.value;
 };
 const body = document.querySelector("body");
+
 let openSearchBox = ref(false);
+let openSigninModal = ref(false);
+let form = useForm({});
+
 const toggleSearchBox = () => {
     openSearchBox.value = !openSearchBox.value;
 };
+
+const toggleSigninModal = () => {
+    openSigninModal.value = !openSigninModal.value;
+};
+
 watch(openSearchBox, () => {
     if (openSearchBox.value) {
-        body.style = "overflow: hidden;";
+        body.style = "overflow-y: hidden;";
     } else {
         body.style = "";
     }
 });
+watch(openSigninModal, () => {
+    if (openSigninModal.value) {
+        body.style = "overflow-y: hidden;";
+    } else {
+        body.style = "";
+    }
+});
+
+const logout = () => {
+    if (confirm("Are you sure want to logout?")) {
+        form.post("/logout");
+    }
+};
 </script>
 
 <template>
@@ -45,11 +69,14 @@ watch(openSearchBox, () => {
                     <li class="item" :class="{ active: $page.url === '/tags' }">
                         <Link href="/tags">Tags</Link>
                     </li>
-                    <li
-                        class="item"
-                        :class="{ active: $page.url === '/about' }"
-                    >
-                        <Link href="/about">About</Link>
+                    <li class="item">
+                        <button
+                            v-if="!$page.props.user"
+                            @click="toggleSigninModal"
+                        >
+                            Sign in
+                        </button>
+                        <button v-else @click="logout">Logout</button>
                     </li>
                 </ul>
                 <ul class="flex space-x-6 sm:space-x-8 items-center">
@@ -57,14 +84,6 @@ watch(openSearchBox, () => {
                         <button type="button" @click="toggleSearchBox">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </button>
-                        <!-- <button
-                            data-modal-target="popup-modal"
-                            data-modal-toggle="popup-modal"
-                            type="button"
-                            @click="toggleSearchBox"
-                        >
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                        </button> -->
                     </li>
                     <li class="item">
                         <button class="" @click="toggleTheme">
@@ -91,6 +110,7 @@ watch(openSearchBox, () => {
         </nav>
     </header>
     <MobileNavbar />
+    <AuthWrapper :open="openSigninModal" @close="openSigninModal = false" />
     <SearchBox :open="openSearchBox" @close="openSearchBox = false" />
 </template>
 

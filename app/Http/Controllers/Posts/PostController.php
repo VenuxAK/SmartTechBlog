@@ -3,10 +3,8 @@
 namespace App\Http\Controllers\Posts;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\PostResource;
 use App\Models\Post;
 use App\Models\Tag;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class PostController extends Controller
@@ -27,6 +25,22 @@ class PostController extends Controller
 
     public function show(Post $post)
     {
+        $post = [
+            "id" => $post->id,
+            "title" => $post->title,
+            "body" => $post->body,
+            "created_at" => $post->created_at,
+            "slug" => $post->slug,
+            "tags" => $post->tags ?  $post->tags->map(function ($tag) {
+                return $tag->name;
+            }) : NULL,
+            "author" => [
+                "name" => $post->author->name,
+                "username" => $post->author->username,
+                "email" => $post->author->email,
+                "avatar" => $post->author->avatar,
+            ]
+        ];
         return Inertia::render('ShowPost', [
             "post" => $post
         ]);
