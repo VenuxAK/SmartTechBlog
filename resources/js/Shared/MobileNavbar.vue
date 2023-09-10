@@ -3,15 +3,19 @@ import { ref } from "vue";
 import AuthWrapper from "../Components/Auth/AuthWrapper.vue";
 import { useForm } from "@inertiajs/vue3";
 
+const props = defineProps(["open"]);
+const emit = defineEmits(["close"]);
 let openSigninModal = ref(false);
 let form = useForm({});
 
 const toggleSigninModal = () => {
     openSigninModal.value = !openSigninModal.value;
+    emit("close");
 };
 const logout = () => {
     if (confirm("Are you sure want to logout?")) {
         form.post("/logout");
+        emit("close");
     }
 };
 </script>
@@ -19,10 +23,8 @@ const logout = () => {
 <template>
     <!-- drawer component -->
     <div
-        id="drawer-navigation"
-        class="fixed top-0 left-0 z-40 w-full h-screen p-4 overflow-y-auto transition-transform -translate-x-full bg-white dark:bg-gray-950 bg-opacity-90"
-        tabindex="-1"
-        aria-labelledby="drawer-navigation-label"
+        class="fixed top-0 left-0 z-40 w-full h-screen p-4 overflow-y-auto transition-transform bg-white dark:bg-gray-950 bg-opacity-90"
+        :class="open ? '' : '-translate-x-full'"
     >
         <div class="container h-full p-6">
             <div class="flex justify-between items-center">
@@ -31,9 +33,8 @@ const logout = () => {
                 </div>
                 <div>
                     <button
-                        data-drawer-hide="drawer-navigation"
-                        aria-controls="drawer-navigation"
-                        class="text-gray-700 dark:text-white bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg dark:hover:bg-gray-600 dark:hover:text-white"
+                        @click="emit('close')"
+                        class="text-gray-700 dark:text-white bg-transparent hover:text-gray-900 rounded-lg dark:hover:text-white"
                     >
                         <i class="fa-solid fa-xmark text-3xl"></i>
                         <span class="sr-only">Close menu</span>
@@ -45,7 +46,7 @@ const logout = () => {
                     class="h-full flex flex-col justify-center items-center space-y-4 font-medium"
                 >
                     <li>
-                        <button data-drawer-hide="drawer-navigation">
+                        <button @click="emit('close')">
                             <Link
                                 href="/"
                                 class="nav-item"
@@ -56,7 +57,7 @@ const logout = () => {
                         </button>
                     </li>
                     <li>
-                        <button data-drawer-hide="drawer-navigation">
+                        <button @click="emit('close')">
                             <Link
                                 href="/posts"
                                 class="nav-item"
@@ -67,7 +68,7 @@ const logout = () => {
                         </button>
                     </li>
                     <li>
-                        <button data-drawer-hide="drawer-navigation">
+                        <button @click="emit('close')">
                             <Link
                                 href="/tags"
                                 class="nav-item"
@@ -77,16 +78,21 @@ const logout = () => {
                             </Link>
                         </button>
                     </li>
-                    <li>
-                        <button data-drawer-hide="drawer-navigation">
-                            <button
-                                v-if="!$page.props.user"
-                                @click="toggleSigninModal"
-                            >
-                                Sign in
-                            </button>
-                            <button v-else @click="logout">Logout</button>
+                    <li v-if="$page.props.user && $page.props.user.role == 1">
+                        <button @click="emit('close')">
+                            <Link href="/admin/dashboard" class="nav-item">
+                                <span class="ml-3">Dashboard</span>
+                            </Link>
                         </button>
+                    </li>
+                    <li>
+                        <button
+                            v-if="!$page.props.user"
+                            @click="toggleSigninModal"
+                        >
+                            Sign in
+                        </button>
+                        <button v-else @click="logout">Logout</button>
                     </li>
                 </ul>
             </div>

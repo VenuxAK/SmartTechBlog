@@ -26,3 +26,27 @@ body {
     @apply bg-primary rounded-xl;
     /* border: 3px solid royalblue; */
 }
+
+.btn {
+    @apply text-sm px-2 py-1 rounded text-white font-bold transition-all;
+}
+.btn-create {
+    @apply bg-primary hover:bg-primary/80;
+}
+.btn-edit {
+    @apply bg-success hover:bg-success/80;
+}
+.btn-delete {
+    @apply bg-danger hover:bg-danger/80;
+}
+
+.form-label {
+    @apply block mb-1 text-sm font-medium text-gray-900 dark:text-white;
+}
+.form-input {
+    @apply bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 focus:outline-none dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500;
+}
+
+.link-primary {
+    @apply font-medium text-blue-600 dark:text-blue-500 hover:underline;
+}

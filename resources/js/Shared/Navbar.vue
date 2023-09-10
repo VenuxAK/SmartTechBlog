@@ -6,15 +6,15 @@ import SearchBox from "../Components/SearchBox.vue";
 import AuthWrapper from "../Components/Auth/AuthWrapper.vue";
 import { useForm } from "@inertiajs/vue3";
 
+let form = useForm({});
 const isDark = useDark();
 const toggleTheme = () => {
     isDark.value = !isDark.value;
 };
-const body = document.querySelector("body");
 
 let openSearchBox = ref(false);
 let openSigninModal = ref(false);
-let form = useForm({});
+let openMobileNavbar = ref(false);
 
 const toggleSearchBox = () => {
     openSearchBox.value = !openSearchBox.value;
@@ -23,17 +23,15 @@ const toggleSearchBox = () => {
 const toggleSigninModal = () => {
     openSigninModal.value = !openSigninModal.value;
 };
+let body = document.querySelector("body");
 
-watch(openSearchBox, () => {
-    if (openSearchBox.value) {
-        body.style = "overflow-y: hidden;";
-    } else {
-        body.style = "";
-    }
-});
-watch(openSigninModal, () => {
-    if (openSigninModal.value) {
-        body.style = "overflow-y: hidden;";
+watch([openSigninModal, openSearchBox, openMobileNavbar], () => {
+    if (
+        openSigninModal.value ||
+        openSearchBox.value ||
+        openMobileNavbar.value
+    ) {
+        body.style = "overflow-y: hidden";
     } else {
         body.style = "";
     }
@@ -48,7 +46,6 @@ const logout = () => {
 
 <template>
     <header>
-        <!-- px-4 py-4 lg:px-12 lg:py-6 -->
         <nav class="flex justify-between items-center py-4">
             <div>
                 <Link href="/">
@@ -69,14 +66,19 @@ const logout = () => {
                     <li class="item" :class="{ active: $page.url === '/tags' }">
                         <Link href="/tags">Tags</Link>
                     </li>
+                    <li
+                        class="item"
+                        v-if="$page.props.user && $page.props.user.role == 1"
+                    >
+                        <Link href="/admin/dashboard">Dashboard</Link>
+                    </li>
                     <li class="item">
-                        <button
-                            v-if="!$page.props.user"
-                            @click="toggleSigninModal"
-                        >
-                            Sign in
-                        </button>
-                        <button v-else @click="logout">Logout</button>
+                        <div v-if="!$page.props.user">
+                            <button @click="toggleSigninModal">Sign in</button>
+                        </div>
+                        <div v-else>
+                            <button @click="logout">Logout</button>
+                        </div>
                     </li>
                 </ul>
                 <ul class="flex space-x-6 sm:space-x-8 items-center">
@@ -100,24 +102,19 @@ const logout = () => {
                 </ul>
                 <button
                     class="sm:hidden text-3xl ml-6 dark:text-white text-gray-700"
-                    data-drawer-target="drawer-navigation"
-                    data-drawer-show="drawer-navigation"
-                    aria-controls="drawer-navigation"
+                    @click="openMobileNavbar = true"
                 >
                     <i class="fa-solid fa-bars"></i>
                 </button>
             </div>
         </nav>
     </header>
-    <MobileNavbar />
+    <MobileNavbar :open="openMobileNavbar" @close="openMobileNavbar = false" />
     <AuthWrapper :open="openSigninModal" @close="openSigninModal = false" />
     <SearchBox :open="openSearchBox" @close="openSearchBox = false" />
 </template>
 
 <style lang="scss" scoped>
-// .nav-items-wrapper {
-// @apply flex space-x-8 items-center;
-
 .item {
     a,
     button {

@@ -42,6 +42,7 @@ class HandleInertiaRequests extends Middleware
             "fullName" => auth()->user()->name,
             "username" => auth()->user()->username,
             "email" => auth()->user()->email,
+            "role" => auth()->user()->role,
             "avatar" => auth()->user()->avatar,
         ] : NULL;
         return array_merge(parent::share($request), [
