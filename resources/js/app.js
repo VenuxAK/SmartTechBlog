@@ -1,8 +1,12 @@
 import { createApp, h } from "vue";
-import { createInertiaApp } from "@inertiajs/vue3";
+import { Head, Link, createInertiaApp } from "@inertiajs/vue3";
 
 // css
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import "animate.css";
+
+// Flowbite
+import "flowbite";
 
 createInertiaApp({
     resolve: (name) => {
@@ -12,6 +16,11 @@ createInertiaApp({
     setup({ el, App, props, plugin }) {
         createApp({ render: () => h(App, props) })
             .use(plugin)
+            .component("Link", Link)
+            .component("Head", Head)
             .mount(el);
+    },
+    progress: {
+        color: "red",
     },
 });
