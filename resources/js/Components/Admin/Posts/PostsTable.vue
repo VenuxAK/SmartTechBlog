@@ -1,7 +1,17 @@
 <script setup>
+import { useForm } from "@inertiajs/vue3";
 import { ref } from "vue";
 
+const props = defineProps(["posts"]);
 let openFilter = ref(false);
+
+const form = useForm({});
+
+const deletePost = (id) => {
+    if (confirm("Are your sure want to delete?")) {
+        form.delete(`/admin/posts/${id}`);
+    }
+};
 </script>
 
 <template>
@@ -181,34 +191,46 @@ let openFilter = ref(false);
             </thead>
             <tbody>
                 <tr
-                    v-for="i in 10"
-                    :key="i"
+                    v-for="post in posts.data"
+                    :key="post"
                     class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                 >
                     <td class="px-6 py-4">
-                        {{ i }}
+                        {{ post.id }}
                     </td>
                     <th
                         scope="row"
                         class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
-                        <Link :href="'/admin/posts/' + i" class="link-primary"
-                            >Post Title</Link
+                        <Link
+                            :href="'/admin/posts/' + post.slug + '/show'"
+                            class="link-primary"
+                            >{{ post.title }}</Link
                         >
                     </th>
-                    <td class="px-6 py-4">Silver</td>
-                    <td class="px-6 py-4">Developer</td>
-                    <td class="px-6 py-4">9 Sep, 2023</td>
+                    <td class="px-6 py-4">
+                        <span class="badge" v-if="post.tags[0]">{{
+                            post.tags[0].name
+                        }}</span>
+                        <span v-else class="text-danger text-sm"> NULL </span>
+                    </td>
+                    <td class="px-6 py-4">{{ post.author.name }}</td>
+                    <td class="px-6 py-4">{{ post.created_at }}</td>
                     <td class="px-6 py-4 flex items-center space-x-2">
                         <div>
                             <Link
-                                :href="'/admin/posts/' + i + '/edit'"
+                                :href="'/admin/posts/' + post.id + '/edit'"
                                 class="btn btn-edit"
                                 >Edit</Link
                             >
                         </div>
                         <div>
-                            <button class="btn btn-delete">Delete</button>
+                            <button
+                                @click="deletePost(post.id)"
+                                class="btn btn-delete"
+                            >
+                                Delete
+                            </button>
                         </div>
                     </td>
                 </tr>
@@ -285,4 +307,8 @@ let openFilter = ref(false);
     </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.badge {
+    @apply bg-blue-100 text-blue-800 text-xs font-medium px-1.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300 cursor-pointer;
+}
+</style>

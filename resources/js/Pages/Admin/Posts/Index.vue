@@ -6,6 +6,8 @@ export default {
 <script setup>
 import PostsTable from "../../../Components/Admin/Posts/PostsTable.vue";
 import AdminLayout from "../../../Shared/Admin/AdminLayout.vue";
+
+const props = defineProps(["posts"]);
 </script>
 
 <template>
@@ -16,7 +18,7 @@ import AdminLayout from "../../../Shared/Admin/AdminLayout.vue";
             </h1>
         </div>
         <div>
-            <PostsTable />
+            <PostsTable :posts="posts" />
         </div>
     </section>
 </template>

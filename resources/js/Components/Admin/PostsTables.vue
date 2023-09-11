@@ -1,4 +1,6 @@
-<script setup></script>
+<script setup>
+const props = defineProps(["posts"]);
+</script>
 
 <template>
     <div class="relative overflow-x-auto my-6">
@@ -15,39 +17,48 @@
                     <th scope="col" class="px-6 py-3">#</th>
                     <th scope="col" class="px-6 py-3">Title</th>
                     <th scope="col" class="px-6 py-3">Author</th>
-                    <th scope="col" class="px-6 py-3">Tags</th>
+                    <!-- <th scope="col" class="px-6 py-3">Tags</th> -->
                     <th scope="col" class="px-6 py-3">Created At</th>
                     <th scope="col" class="px-6 py-3">Action</th>
                 </tr>
             </thead>
             <tbody>
                 <tr
-                    v-for="i in 10"
-                    :key="i"
+                    v-for="post in posts"
+                    :key="post.id"
                     class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                 >
-                    <td class="px-6 py-4">{{ i }}</td>
+                    <td class="px-6 py-4">{{ post.id }}</td>
                     <th
                         scope="row"
                         class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
-                        <Link :href="'/admin/posts/' + i" class="link-primary"
-                            >Post title</Link
+                        <Link
+                            :href="'/admin/posts/' + post.slug + '/show'"
+                            class="link-primary"
+                            >{{ post.title }}</Link
                         >
                     </th>
-                    <td class="px-6 py-4">Developer</td>
-                    <td class="px-6 py-4">Tech</td>
-                    <td class="px-6 py-4">9 Sep, 2023</td>
+                    <td class="px-6 py-4">{{ post.author }}</td>
+                    <!-- <td class="px-6 py-4">
+                        <span
+                            v-if="post.tags && post.tags.length > 0"
+                            v-for="tag in post.tags"
+                            :key="tag"
+                            class="flex flex-wrap"
+                        >
+                            <span class="badge-default">{{ tag.name }}</span>
+                        </span>
+                        <span v-else> No Tags </span>
+                    </td> -->
+                    <td class="px-6 py-4">{{ post.created_at }}</td>
                     <td class="px-6 py-4 flex items-center space-x-2">
                         <div>
                             <Link
-                                :href="'/admin/posts/' + i + '/edit'"
+                                :href="'/admin/posts/' + post.slug + '/show'"
                                 class="btn btn-edit"
-                                >Edit</Link
+                                >View</Link
                             >
-                        </div>
-                        <div>
-                            <button class="btn btn-delete">Delete</button>
                         </div>
                     </td>
                 </tr>
@@ -56,4 +67,8 @@
     </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.badge-default {
+    @apply bg-blue-100 text-blue-800 text-xs font-medium m-1 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300;
+}
+</style>

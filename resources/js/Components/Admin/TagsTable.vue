@@ -1,4 +1,6 @@
-<script setup></script>
+<script setup>
+const props = defineProps(["tags"]);
+</script>
 
 <template>
     <div class="relative overflow-x-auto my-6">
@@ -20,24 +22,26 @@
             </thead>
             <tbody>
                 <tr
-                    v-for="i in 6"
-                    :key="i"
+                    v-for="tag in tags"
+                    :key="tag"
                     class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                 >
-                    <td class="px-6 py-4">{{ i }}</td>
+                    <td class="px-6 py-4">{{ tag.id }}</td>
                     <th
                         scope="row"
                         class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
-                        <Link :href="'/admin/tags/' + i" class="link-primary"
-                            >Tag name</Link
+                        <Link
+                            :href="'/admin/tags/' + tag.id"
+                            class="link-primary"
+                            >{{ tag.name }}</Link
                         >
                     </th>
-                    <td class="px-6 py-4">5</td>
+                    <td class="px-6 py-4">{{ tag.post_count }}</td>
                     <td class="px-6 py-4 flex items-center space-x-2">
                         <div>
                             <Link
-                                :href="'/admin/tags/' + i + '/edit'"
+                                :href="'/admin/tags/' + tag.id + '/edit'"
                                 class="btn btn-edit"
                                 >Edit</Link
                             >

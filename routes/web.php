@@ -37,7 +37,15 @@ Route::middleware('auth')->group(function () {
 Route::middleware('is_admin')->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, "index"]);
 
-    Route::resource('/posts', AdminPostController::class);
+    // Route::resource('/posts', AdminPostController::class);
+    Route::get('/posts', [AdminPostController::class, "index"]);
+    Route::get('/posts/{post:slug}/show', [AdminPostController::class, "show"]);
+    Route::get('/posts/create', [AdminPostController::class, "create"]);
+    Route::post('/posts/store', [AdminPostController::class, "store"]);
+    Route::get('/posts/{id}/edit', [AdminPostController::class, "edit"]);
+    Route::patch('/posts/{id}/update', [AdminPostController::class, "update"]);
+    Route::put('/posts/{id}/update', [AdminPostController::class, "update"]);
+    Route::delete('/posts/{id}', [AdminPostController::class, "destroy"]);
 
     Route::resource('/tags', AdminTagController::class);
 

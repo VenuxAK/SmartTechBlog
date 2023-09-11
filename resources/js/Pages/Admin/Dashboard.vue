@@ -7,6 +7,8 @@ export default {
 import PostsTables from "../../Components/Admin/PostsTables.vue";
 import TagsTable from "../../Components/Admin/TagsTable.vue";
 import AdminLayout from "../../Shared/Admin/AdminLayout.vue";
+
+const props = defineProps(["posts", "tags"]);
 </script>
 <template>
     <section>
@@ -16,8 +18,8 @@ import AdminLayout from "../../Shared/Admin/AdminLayout.vue";
                     Dashboard
                 </h1>
             </div>
-            <PostsTables />
-            <TagsTable />
+            <PostsTables :posts="posts" />
+            <TagsTable :tags="tags" />
         </div>
     </section>
 </template>
